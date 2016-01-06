@@ -1,24 +1,32 @@
-const fetch = require('node-fetch');
-const utils = require('../utils');
+const Apod = require('../models/apod');
+const ApodsSerializer = require('../serializers/apod');
 
-function findApod (id) {
-  let url = `${utils.COUCH_URL}/${id}?include_doc=true`;
-  return fetch(url)
-    .then((r) => r.json())
-    .then((data) => Apod.fromCouchRow(data.row));
-}
 
 const ApodRoutes = {
 
-  index (req, reply) { }, /*jshint ignore:line*/
+  index (req, reply) {
+    let offset = req.query.offset || 0;
+    let limit = Math.min(req.query.limit || 10, 62);
+
+    return Apod.findMany(offset, limit)
+      .then((apods) => {
+        let json = new ApodsSerializer(apods);
+        reply(json).code(200);
+      })
+      .catch((error) => {
+        reply(error).code(400);
+      });
+  }, 
 
   show (req, reply) {
     let id = req.params.date;
-    return findApod(id)
-      .then((apod) => reply('==').code(200))
-      .catch(function (error) {
-        console.log('error');
-        reply(error);
+    return Apod.find(id)
+      .then((apod) => {
+        let json = new ApodsSerializer(apod);
+        reply(json).code(200);
+      })
+      .catch((error) => {
+        reply(error).code(400);
       });
   },
 

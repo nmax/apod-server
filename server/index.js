@@ -1,5 +1,11 @@
 const Hapi = require('hapi');
-const server = new Hapi.Server();
+
+const server = new Hapi.Server({
+  debug: {
+    log: ['error'],
+    request: ['error'],
+  }
+});
 const ApodRoutes = require('./routes/apod');
 
 server.connection({ port: 3000 });
@@ -14,7 +20,23 @@ server.route({
 
 server.route({
   method: 'GET',
-  path: '/apod/{date}',
+  path: '/apods',
+  config: {
+    json: {
+      space: 2
+    }
+  },
+  handler: ApodRoutes.index
+});
+
+server.route({
+  method: 'GET',
+  path: '/apods/{date}',
+  config: {
+    json: {
+      space: 2
+    }
+  },
   handler: ApodRoutes.show
 });
 

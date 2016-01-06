@@ -2,6 +2,7 @@ const JSONAPISerializer = require('jsonapi-serializer');
 const utils = require('../utils');
 
 function getNextApodId (id) {
+  console.log(id);
   let date = utils.YYMMDDtoDate(id);
   let nextDate = utils.addDay(date);
   return utils.dateToYYMMDD(nextDate);
@@ -23,6 +24,7 @@ module.exports = class ApodsSerializer extends JSONAPISerializer {
           return 'http://localhost:3000/api/apods/' + apod.id;
         },
         next (apod) {
+          console.log(apod);
           return 'http://localhost:3000/api/apods/' + getNextApodId(apod.id);
 
         },

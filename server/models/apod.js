@@ -8,7 +8,15 @@ class Apod {
     let url = `${config.COUCH_URL}/${id}?include_doc=true`;
     console.log(url);
     return fetch(url)
-      .then((r) => r.json())
+      .then((res) => {
+        if (res.status > 200) {
+          throw {
+            type: 'query error',
+            status: res.status
+          };
+        }
+        return res.json();
+      })
       .then((data) => {
         return new Apod(data);
       });
@@ -23,7 +31,16 @@ class Apod {
     console.log(url);
 
     return fetch(url)
-      .then((r) => r.json())
+      .then((res) => {
+        if (res.status > 200) {
+          throw {
+            type: 'query error',
+            status: res.status
+          };
+        }
+
+        return res.json();
+      })
       .then((data) => {
         return data.rows.map(function (row) {
           return new Apod(row.doc);

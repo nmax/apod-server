@@ -14,7 +14,7 @@ const ApodRoutes = {
         reply(json).code(200);
       })
       .catch((error) => {
-        reply(error).code(400);
+        reply(error).code(error.status);
       });
   }, 
 
@@ -26,11 +26,13 @@ const ApodRoutes = {
         reply(json).code(200);
       })
       .catch((error) => {
-        reply(error).code(400);
+        reply(error).code(error.status);
       });
   },
 
-  search (req, reply) { } /*jshint ignore:line*/
+  search (req, reply) {
+    reply('not yet implemented').code(501);
+  }
 };
 
 module.exports = ApodRoutes;

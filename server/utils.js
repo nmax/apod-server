@@ -14,7 +14,7 @@ exports.YYMMDDtoDate = function YYMMDDtoDate(yymmdd, sep='-') {
   return new Date(Date.UTC(year, month - 1, day));
 };
 
- function dateToYYMMDD(date, sep='-') {
+exports.dateToYYMMDD = function dateToYYMMDD(date, sep='-') {
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
   let day = date.getDate();
@@ -28,16 +28,10 @@ exports.YYMMDDtoDate = function YYMMDDtoDate(yymmdd, sep='-') {
   }
 
   return [year, month, day].join(sep);
-}
-
-exports.dateToYYMMDD = dateToYYMMDD;
-
-exports.getTimespan = function getTimespan(offsetBeginOfTime, days, beginOfTime=Date.now()) {
-  let start = new Date(beginOfTime - (offsetBeginOfTime * DAY));
-  let end = new Date(start - (days * DAY));
-
-  return {
-    from: dateToYYMMDD(start),
-    to: dateToYYMMDD(end)
-  };
 };
+
+exports.offsetTime = function offsetTime(offsetDays, beginOfTime) {
+  return new Date(beginOfTime - (offsetDays * DAY));
+};
+
+

@@ -44,7 +44,7 @@ function importFiles (fileNames) {
 
   return Promise.all(files)
     .then(function (files) {
-      files.reduce(function (chain, data) {
+      return files.reduce(function (chain, data) {
         return chain.then(() => {
           let doc = Object.assign(data.content, {
             _id: data.name.split('.')[0],

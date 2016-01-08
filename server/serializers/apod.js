@@ -30,7 +30,7 @@ module.exports = class ApodSerializer extends JSONAPISerializer {
           return 'http://localhost:3000/api/apods/' + getPreviousApodId(apod.id);
         }
       },
-      attributes: ['copyright', 'explanation', 'title', 'url', 'hdurl', 'concepts', 'mediaType'],
+      attributes: ['copyright', 'explanation', 'title', 'url', 'hdurl', 'concepts', 'mediaType']
     });
   }
 };

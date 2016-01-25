@@ -8,7 +8,7 @@
     "crawl": "babel-node scripts/crawler.js",
     "couch-import": "babel-node scripts/couchdb-importer.js",
     "elastic-index": "babel-node scripts/elastic-indexer.js",
-    "server": "nodemon -x 'babel-node server/index.js'"
+    "start": "nodemon -x 'babel-node server/index.js'"
   },
   "author": "",
   "license": "MIT",

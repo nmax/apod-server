@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "crawl": "babel-node scripts/crawler.js",
+    "crawl": "babel-node scripts/apod-crawler.js",
     "couch-import": "babel-node scripts/couchdb-importer.js",
     "elastic-index": "babel-node scripts/elastic-indexer.js",
     "start": "nodemon -x 'babel-node server/index.js'"

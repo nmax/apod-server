@@ -15,6 +15,8 @@ function queryCouchDB (url) {
     });
 }
 
+const STUPID_API_ERROR = "concept_tags functionality turned off in current service";
+
 class Apod {
 
   static findLatest () {
@@ -50,8 +52,14 @@ class Apod {
     this.url = data.url;
     this.hdurl = data.hdurl;
     this.mediaType = data.media_type;
-    this.concepts = data.concepts || [];
     this.explanation = data.explanation;
+    this.copyright = data.copyright;
+
+    if (data.concepts && data.concepts !== STUPID_API_ERROR) {
+      this.concepts = data.concepts;
+    } else {
+      this.concepts = [];
+    }
   }
 }
 

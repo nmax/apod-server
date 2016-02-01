@@ -1,53 +1,54 @@
 const fetch = require('node-fetch');
-const config = require('../config');
-const utils = require('../utils');
+const API_KEY = process.env.NASA_API_KEY;
+const STUPID_API_ERROR = "concept_tags functionality turned off in current service";
 
-function queryCouchDB (url) {
-  return fetch(url)
-    .then((res) => {
-      if (res.status > 200) {
-        throw {
-          type: 'query error',
-          status: res.status
-        };
-      }
-      return res.json();
-    });
+function dateToQueryFormat (date) {
+  let year = date.getFullYear();
+  let month = date.getMonth();
+  let day = date.getDate();
+  return `${year}-${month}-${day}`;
 }
 
-const STUPID_API_ERROR = "concept_tags functionality turned off in current service";
+function buildURL(queryDate) {
+  return `https://api.nasa.gov/planetary/apod?concept_tags=true&api_key=${API_KEY}&date=${queryDate}&hd=true`;
+}
+
+function fetchApod(url) {
+  return fetch(url).then((response) => response.json());
+}
 
 class Apod {
 
   static findLatest () {
-    let url = `${config.COUCH_URL}/_design/days/_view/by_date?limit=1&descending=true&include_docs=false`;
-
-    return queryCouchDB(url)
-      .then((data) => new Apod(data.rows[0].value));
+    let queryDate = dateToQueryFormat(new Date());
+    let url = buildURL(queryDate);
+    return fetchApod(url)
+      .then((data) => new Apod(data));
   }
 
   static find (id) {
-    let url = `${config.COUCH_URL}/${id}`;
-
-    return queryCouchDB(url)
+    let url = buildURL(id);
+    return fetchApod(url)
       .then((data) => new Apod(data));
   }
 
   static findMany (offsetDays, limit) {
-    return Apod.findLatest()
-      .then(function (apod) {
-        let beginOfTime = utils.YYMMDDtoDate(apod.id);
-        let startYYMMDD = utils.dateToYYMMDD(utils.offsetTime(offsetDays, beginOfTime));
-        let startkey = startYYMMDD.split('-').map((x) => parseInt(x, 10));
-        let url = `${config.COUCH_URL}/_design/days/_view/by_date?startkey=[${startkey}]&limit=${limit}&include_docs=false&descending=true`;
+    let batch = [];
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+    let day = now.getDate();
 
-        return queryCouchDB(url)
-          .then((data) => data.rows.map(({ value }) => new Apod(value)));
-      });
+    for (let i = 0; i < limit; i += 1) {
+      let date = new Date(Date.UTC(year, month, day - offsetDays - i));
+      batch.push(dateToQueryFormat(date));
+    }
+
+    return Promise.all(batch.map((id) => Apod.find(id)));
   }
 
   constructor (data) {
-    this.id = data._id;
+    this.id = data.date;
     this.title = data.title;
     this.url = data.url;
     this.hdurl = data.hdurl;

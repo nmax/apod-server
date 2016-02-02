@@ -20,6 +20,7 @@
     "jsonapi-serializer": "^2.0.4",
     "nano": "^6.1.5",
     "node-fetch": "^1.3.3",
+    "sinon": "^1.17.3",
     "tap-spec": "^4.1.1",
     "tape": "^4.4.0"
   }

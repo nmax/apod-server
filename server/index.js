@@ -1,4 +1,7 @@
-const Hapi = require('hapi');
+import ApodRoute from './routes/apod';
+import apodService from './services/apod';
+
+import Hapi from 'hapi';
 
 const server = new Hapi.Server({
   debug: {
@@ -6,7 +9,6 @@ const server = new Hapi.Server({
     request: ['error'],
   }
 });
-const ApodRoutes = require('./routes/apod');
 server.connection({ port: 3000 });
 
 const defaultConfig ={
@@ -16,6 +18,8 @@ const defaultConfig ={
 };
 
 const namespace = 'api';
+
+let apodRoute = new ApodRoute(apodService);
 
 server.route({
   method: 'GET',
@@ -37,23 +41,28 @@ server.route({
   method: 'GET',
   path: `/${namespace}/apods`,
   config: defaultConfig,
-  handler: ApodRoutes.index
+  handler: function (req, reply) {
+    return apodRoute.index(req, reply);
+  }
 });
 
 server.route({
   method: 'GET',
   path: `/${namespace}/apods/{date}`,
   config: defaultConfig,
-  handler: ApodRoutes.show
+  handler: function (req, reply) {
+    return apodRoute.show(req, reply);
+  }
 });
 
 server.route({
   method: 'GET',
   path: `/${namespace}/search`,
   config: defaultConfig,
-  handler: ApodRoutes.search
+  handler: function (req, reply) {
+    return apodRoute.show(req, reply);
+  }
 });
-
 
 server.start(() => {
   console.log('Server running at:', server.info.uri);

@@ -30,8 +30,4 @@ exports.dateToYYMMDD = function dateToYYMMDD(date, sep='-') {
   return [year, month, day].join(sep);
 };
 
-exports.offsetTime = function offsetTime(offsetDays, beginOfTime) {
-  return new Date(beginOfTime - (offsetDays * DAY));
-};
-
 

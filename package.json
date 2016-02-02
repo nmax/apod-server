@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "babel-tape-runner \"server/tests/**/*-test.js\" | tap-spec",
     "crawl": "babel-node scripts/apod-crawler.js",
     "couch-import": "babel-node scripts/couchdb-importer.js",
     "elastic-index": "babel-node scripts/elastic-indexer.js",
@@ -15,9 +15,12 @@
   "devDependencies": {
     "babel-cli": "^6.3.17",
     "babel-preset-es2015": "^6.3.13",
+    "babel-tape-runner": "^2.0.0",
     "hapi": "^12.0.0",
     "jsonapi-serializer": "^2.0.4",
     "nano": "^6.1.5",
-    "node-fetch": "^1.3.3"
+    "node-fetch": "^1.3.3",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.4.0"
   }
 }

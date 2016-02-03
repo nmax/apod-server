@@ -1,5 +1,7 @@
 import ApodRoute from './routes/apod';
+
 import apodService from './services/apod';
+import diskSearch from './services/disk-search';
 
 import Hapi from 'hapi';
 
@@ -19,7 +21,7 @@ const defaultConfig ={
 
 const namespace = 'api';
 
-let apodRoute = new ApodRoute(apodService);
+let apodRoute = new ApodRoute(apodService, diskSearch);
 
 server.route({
   method: 'GET',
@@ -31,9 +33,8 @@ server.route({
       apods: `http://localhost:3000/${namespace}/apods`,
       search: `http://localhost:3000/${namespace}/search`
     };
-    reply({
-      links
-    });
+
+    reply({ links });
   }
 });
 
@@ -42,22 +43,17 @@ server.route({
   path: `/${namespace}/apods`,
   config: defaultConfig,
   handler: function (req, reply) {
-    return apodRoute.index(req, reply);
+    if (req.query.q) {
+      return apodRoute.search(req, reply);
+    } else {
+      return apodRoute.index(req, reply);
+    }
   }
 });
 
 server.route({
   method: 'GET',
   path: `/${namespace}/apods/{date}`,
-  config: defaultConfig,
-  handler: function (req, reply) {
-    return apodRoute.show(req, reply);
-  }
-});
-
-server.route({
-  method: 'GET',
-  path: `/${namespace}/search`,
   config: defaultConfig,
   handler: function (req, reply) {
     return apodRoute.show(req, reply);

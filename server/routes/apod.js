@@ -2,8 +2,9 @@ import ApodSerializer from '../serializers/apod';
 
 export default class ApodRouter {
 
-  constructor (apodService) {
+  constructor (apodService, diskSearchService) {
     this.apodService = apodService;
+    this.diskSearch = diskSearchService;
   }
 
   index (req, reply) {
@@ -33,6 +34,21 @@ export default class ApodRouter {
   }
 
   search (req, reply) {
-    reply('not yet implemented').code(501);
+    let searchTerm = req.query.q;
+    if (!searchTerm || searchTerm.length < 3) {
+      return reply({
+        type: 'bad request',
+        error: 'search param q must at least have a length of 3 characters'
+      }).code(400);
+    }
+
+    return this.diskSearch.query(searchTerm)
+      .then(function (apods) {
+        let json = new ApodSerializer(apods);
+        reply(json).code(200);
+      })
+      .catch(function (error) {
+        reply(error).code(500);
+      });
   }
 }

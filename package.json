@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "test": "babel-tape-runner \"server/tests/**/*-test.js\" | tap-spec",
+    "test": "nodemon -x 'babel-tape-runner \"server/tests/**/*-test.js\" | tap-spec'",
     "crawl": "babel-node scripts/apod-crawler.js",
     "couch-import": "babel-node scripts/couchdb-importer.js",
     "elastic-index": "babel-node scripts/elastic-indexer.js",

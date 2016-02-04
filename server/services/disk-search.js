@@ -4,8 +4,6 @@ import path from 'path';
 import Apod from '../models/apod';
 
 function readFile (filePath) {
-  filePath = filePath.replace("\"", '');
-  filePath = filePath.replace("\"", '');
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, 'utf8', function (err, file) {
       return err ? reject(err) : resolve(file);

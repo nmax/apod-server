@@ -8,7 +8,8 @@
     "crawl": "babel-node scripts/apod-crawler.js",
     "couch-import": "babel-node scripts/couchdb-importer.js",
     "elastic-index": "babel-node scripts/elastic-indexer.js",
-    "start": "nodemon -x 'babel-node server/index.js'"
+    "start": "nodemon -x 'babel-node server/index.js'",
+    "postinstall": "cargo build --release --manifest-path apod-searcher/Cargo.toml"
   },
   "author": "",
   "license": "MIT",

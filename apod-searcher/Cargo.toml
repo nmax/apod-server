@@ -1,0 +1,10 @@
+[package]
+name = "apod-searcher"
+version = "0.1.0"
+authors = ["Maximilian Neger <maximilian.neger@gmail.com>"]
+
+[dependencies]
+serde = "0.6.11"
+serde_json = "0.6.0"
+serde_macros = "0.6.11"
+scoped-pool = "0.1"

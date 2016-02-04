@@ -3,9 +3,11 @@ import fs from 'fs';
 import path from 'path';
 import Apod from '../models/apod';
 
-function readFile (path) {
+function readFile (filePath) {
+  filePath = filePath.replace("\"", '');
+  filePath = filePath.replace("\"", '');
   return new Promise(function (resolve, reject) {
-    fs.readFile(path, 'utf8', function (err, file) {
+    fs.readFile(filePath, 'utf8', function (err, file) {
       return err ? reject(err) : resolve(file);
     });
   });
@@ -24,21 +26,17 @@ const diskSearchService = {
 
   query (searchTerm) {
     let matches = '';
-    let ag = spawn('ag', [searchTerm,
-                   '-l', // return filename of match
-                   '-i',  // ignore case
-                   '-Q',  // disable pattern matching / match literal instead
-                   'data/']);
+    let search = spawn('apod-searcher/target/release/apod-searcher', [searchTerm, 'data/']);
 
     return new Promise (function (resolve, reject) {
 
-      ag.stdout.on('data', (data) => {
+      search.stdout.on('data', (data) => {
         matches += data.toString('utf-8');
       });
 
-      ag.stderr.on('error', (error) => reject(error));
+      search.stderr.on('error', (error) => reject(error));
 
-      ag.on('close', () => {
+      search.on('close', () => {
         // filter empty lines
         let filePaths = matches.split('\n')
                                .filter((match) => match && match.length > 0);
